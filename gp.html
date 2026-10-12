@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#030a2b">
+<title>Gauntlet GP</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23e8c66a'/%3E%3Ctext x='16' y='21' font-size='13' font-family='Arial' font-weight='900' text-anchor='middle' fill='%23030a2b'%3EGP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#030a2b; --deep:#06124a; --card:#0f2170; --card2:#0b1a5c; --line:rgba(170,190,255,.2);
+  --silver:#dfe6f5; --muted:#8f9cc7; --cyan:#3ad6ff; --gold:#e8c66a; --red:#ff5d6c; --green:#4ade80;
+  --display:'Barlow Condensed','Arial Narrow',sans-serif; --body:'Barlow','Segoe UI',system-ui,sans-serif;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--night);color:var(--silver);font-family:var(--body);font-size:16px;-webkit-text-size-adjust:100%}
+body{background:radial-gradient(120% 60% at 50% -10%,#1638b8 0%,#06124a 45%,#030a2b 80%) fixed;min-height:100vh;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+a{color:var(--cyan)}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+.top{position:sticky;top:0;z-index:20;background:rgba(3,10,43,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:12px;height:58px}
+.brand{font-family:var(--display);font-weight:800;letter-spacing:.16em;font-size:18px;color:#fff;text-decoration:none;white-space:nowrap}
+.brand small{display:block;font-size:10px;letter-spacing:.3em;color:var(--muted);font-weight:700;margin-top:-2px}
+.bal{margin-left:auto;flex:none;display:flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border-radius:999px;background:linear-gradient(180deg,#f3d98b,#c99a2e);color:#1c1403;font-weight:800;font-family:var(--display);font-size:20px;letter-spacing:.02em;box-shadow:0 0 0 1px rgba(255,255,255,.25) inset,0 4px 16px rgba(232,198,106,.25)}
+.bal .coin{width:26px;height:26px;border-radius:50%;background:#1c1403;color:var(--gold);display:grid;place-items:center;font-size:11px;letter-spacing:0}
+.mclink{font-family:var(--display);font-weight:700;letter-spacing:.12em;font-size:13px;color:var(--muted);text-decoration:none;border:1px solid var(--line);padding:6px 10px;border-radius:8px;white-space:nowrap}
+h1,h2,h3{font-family:var(--display);letter-spacing:.06em;margin:0;color:#fff}
+h2{font-size:22px;margin:22px 0 10px;font-weight:800}
+.kick{font-family:var(--display);font-weight:700;letter-spacing:.22em;font-size:12px;color:var(--muted);text-transform:uppercase}
+.card{background:linear-gradient(180deg,rgba(20,40,140,.55),rgba(11,26,92,.7));border:1px solid var(--line);border-radius:16px;padding:14px;margin:0 0 12px}
+.muted{color:var(--muted)} .small{font-size:13px} .gold{color:var(--gold)} .cyan{color:var(--cyan)} .red{color:var(--red)} .green{color:var(--green)}
+.row{display:flex;align-items:center;gap:10px}
+.face{border-radius:50%;object-fit:cover;background:#0b1a5c;border:2px solid rgba(223,230,245,.7);flex:none}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.04em;background:rgba(58,214,255,.12);color:var(--cyan);border:1px solid rgba(58,214,255,.35);white-space:nowrap}
+.pill.gold{background:rgba(232,198,106,.12);color:var(--gold);border-color:rgba(232,198,106,.4)}
+.pill.red{background:rgba(255,93,108,.12);color:var(--red);border-color:rgba(255,93,108,.4)}
+.pill.green{background:rgba(74,222,128,.12);color:var(--green);border-color:rgba(74,222,128,.4)}
+.pill.dim{background:rgba(143,156,199,.1);color:var(--muted);border-color:var(--line)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 18px;border-radius:12px;border:0;background:var(--silver);color:var(--night);font-family:var(--display);font-weight:800;font-size:18px;letter-spacing:.1em;text-transform:uppercase}
+.btn.gold{background:linear-gradient(180deg,#f3d98b,#c99a2e);color:#1c1403}
+.btn.ghost{background:transparent;color:var(--silver);border:1px solid var(--line)}
+.btn.danger{background:var(--red);color:#fff}
+.btn.sm{min-height:36px;font-size:14px;padding:0 12px;border-radius:9px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.block{width:100%}
+label.f{display:block;font-size:13px;color:var(--muted);margin:12px 0 6px;font-weight:600}
+input.in,select.in,textarea.in{width:100%;min-height:48px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(3,10,43,.6);font-size:16px}
+textarea.in{min-height:80px;resize:vertical}
+input.in:focus,select.in:focus,textarea.in:focus{outline:2px solid var(--cyan);outline-offset:1px}
+.err{color:var(--red);font-size:14px;margin-top:10px;min-height:1em}
+/* match cards */
+.mcard{display:block;width:100%;text-align:left;border:1px solid var(--line);background:linear-gradient(180deg,rgba(20,40,140,.55),rgba(11,26,92,.7));border-radius:16px;padding:12px 14px;margin:0 0 10px}
+.mtop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
+.side{display:flex;align-items:center;gap:10px;min-width:0}
+.side.r{flex-direction:row-reverse;text-align:right}
+.side .nm{font-family:var(--display);font-weight:800;font-size:18px;color:#fff;line-height:1.05;letter-spacing:.03em;overflow:hidden;text-overflow:ellipsis}
+.side .od{font-size:13px;color:var(--muted)}
+.side .od b{color:var(--cyan);font-size:15px}
+.vsx{font-family:var(--display);font-weight:800;color:var(--red);font-size:18px}
+.mfoot{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+/* tabs */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(3,10,43,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabs .wrap{display:flex;padding:0}
+.tab{flex:1;background:none;border:0;padding:8px 2px 10px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;min-height:60px}
+.tab svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tab.on{color:var(--gold)}
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(1,4,20,.72);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:560px;max-height:92vh;overflow:auto;background:linear-gradient(180deg,#0f2170,#06124a);border:1px solid var(--line);border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+@media (min-width:640px){.scrim{align-items:center}.sheet{border-radius:20px}}
+.sheet .x{float:right;background:none;border:1px solid var(--line);border-radius:10px;width:40px;height:40px;color:var(--silver);font-size:20px}
+.choose{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.opt{border:2px solid var(--line);background:rgba(3,10,43,.5);border-radius:14px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--silver);text-align:center}
+.opt.on{border-color:var(--gold);background:rgba(232,198,106,.12);box-shadow:0 0 0 3px rgba(232,198,106,.15)}
+.opt .nm{font-family:var(--display);font-weight:800;font-size:17px;color:#fff}
+.opt[disabled]{opacity:.4}
+.pw{display:flex;align-items:flex-start;gap:10px;width:100%;text-align:left;border:2px solid var(--line);background:rgba(3,10,43,.5);border-radius:14px;padding:12px;margin-top:8px;color:var(--silver)}
+.pw.on{border-color:var(--cyan);background:rgba(58,214,255,.08)}
+.pw .t{font-family:var(--display);font-weight:800;font-size:17px;color:#fff;letter-spacing:.04em}
+.pw .d{font-size:13px;color:var(--muted);margin-top:2px;line-height:1.35}
+.pw .ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;background:rgba(58,214,255,.14);color:var(--cyan);font-weight:900}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{border:1px solid var(--line);background:rgba(3,10,43,.5);border-radius:999px;padding:7px 12px;font-size:14px;font-weight:700;color:var(--silver);min-height:36px}
+.chip.on{border-color:var(--gold);color:var(--gold)}
+.calc{margin-top:14px;border-radius:14px;padding:12px;background:rgba(3,10,43,.65);border:1px dashed rgba(232,198,106,.45)}
+.calc .big{font-family:var(--display);font-weight:800;font-size:30px;color:var(--gold);letter-spacing:.02em}
+.kv{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:3px 0}
+.kv span:first-child{color:var(--muted)}
+/* lists */
+.li{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.li:last-child{border-bottom:0}
+.li .t{font-weight:700;color:#fff}
+.li .s{font-size:13px;color:var(--muted)}
+.li .amt{margin-left:auto;text-align:right;font-family:var(--display);font-weight:800;font-size:18px;white-space:nowrap}
+.seg{display:flex;background:rgba(3,10,43,.6);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px;margin:6px 0 12px}
+.seg button{flex:1;border:0;background:none;border-radius:9px;min-height:40px;font-family:var(--display);font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;font-size:14px}
+.seg button.on{background:var(--silver);color:var(--night)}
+.shop{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (min-width:560px){.shop{grid-template-columns:1fr 1fr 1fr}}
+.item{border:1px solid var(--line);background:linear-gradient(180deg,rgba(20,40,140,.55),rgba(11,26,92,.7));border-radius:16px;padding:12px;text-align:left;display:flex;flex-direction:column;gap:6px;color:var(--silver);min-height:140px}
+.item .n{font-family:var(--display);font-weight:800;font-size:18px;color:#fff;line-height:1.05;letter-spacing:.03em}
+.item .d{font-size:12.5px;color:var(--muted);line-height:1.35;flex:1}
+.item .p{font-family:var(--display);font-weight:800;font-size:20px;color:var(--gold)}
+.item.no .p{color:var(--muted)}
+.board .li .rk{width:24px;font-family:var(--display);font-weight:800;color:var(--muted);text-align:center}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));z-index:60;background:var(--silver);color:var(--night);padding:12px 16px;border-radius:12px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.4);max-width:calc(100% - 32px)}
+.toast.bad{background:var(--red);color:#fff}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:40px;font-weight:800;line-height:.95;letter-spacing:.04em;background:linear-gradient(180deg,#fff,#aab6d8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.empty{color:var(--muted);font-size:14px;padding:6px 0}
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+table.t th,table.t td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{color:var(--muted);font-weight:600;font-size:12px}
+.scrollx{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+details.ad{border:1px solid var(--line);border-radius:14px;margin:0 0 10px;background:rgba(11,26,92,.5)}
+details.ad>summary{list-style:none;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:8px}
+details.ad>summary::-webkit-details-marker{display:none}
+details.ad>div{padding:0 14px 14px}
+.spinner{width:28px;height:28px;border:3px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:sp 1s linear infinite;margin:40px auto}
+@media (max-width:440px){.brand{font-size:15px;letter-spacing:.08em}.brand small{display:none}.mclink{padding:6px 8px;font-size:12px;letter-spacing:.08em}.bal{font-size:18px}.top .wrap{gap:8px}}
+@keyframes sp{to{transform:rotate(360deg)}}
+.wheel{width:220px;height:220px;margin:10px auto;border-radius:50%;position:relative;border:4px solid var(--gold);transition:transform 3.2s cubic-bezier(.17,.67,.2,1)}
+.wptr{width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:20px solid var(--gold);margin:0 auto -6px;position:relative;z-index:2}
+@media (prefers-reduced-motion:reduce){.wheel{transition:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="./">THE GAUNTLET<small>GP · SEASON 2026</small></a>
+  <a class="mclink" href="./">MATCH CENTRE</a>
+  <div class="bal" id="bal" hidden><span class="coin">GP</span><span id="balv">0</span></div>
+</div></header>
+<main class="wrap" id="main"><div class="spinner"></div></main>
+<nav class="tabs" id="tabs" hidden><div class="wrap" id="tabsw"></div></nav>
+<div id="layer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+'use strict';
+/* ================================================================ constants */
+const TZ = 'Asia/Beirut';
+const FACE = { 1:'bigh', 2:'bahaa', 3:'jingo', 4:'alain', 5:'hassan', 6:'walid', 7:'sadek', 8:'nid', 9:'tarek', 10:'amin' };
+const PW = {
+  odds_boost:   { n:'Odds Boost', ic:'+.5', d:'Adds +0.5 to your decimal odds.' },
+  insurance:    { n:'Bet Insurance', ic:'⛨', d:'Costs 5% of your stake. Lose, and you get 35% of your stake back.' },
+  double_profit:{ n:'Double Profit', ic:'×2', d:'Doubles your net profit if you win.' },
+  exact_score:  { n:'Exact Score', ic:'3–?', d:'Call the exact best-of-5 score. Admin sets the odds; pays stake × odds × 5, capped at 5× your stake.' },
+  all_in:       { n:'All-In Bonus', ic:'ALL', d:'Stake exactly 50% of your balance (from when you opened this match). Win, and get extra profit up to your stake.' },
+  underdog:     { n:'Underdog Challenge', ic:'UD', d:'Back the underdog. If they win, your total payout doubles.' },
+  free_stake:   { n:'Free Stake', ic:'FREE', d:'Bet 10% of your balance for free. Win, and you keep the profit. Lose, and you lose nothing.' },
+};
+const KIND = { initial:'Starting balance', bet_stake:'Bet placed', payout:'Bet won', bonus:'Bonus', insurance_fee:'Insurance fee',
+  insurance_recovery:'Insurance payout', free_stake_profit:'Free Stake profit', shop_purchase:'Shop', dn_wager:'Double or Nothing wager',
+  dn_win:'Double or Nothing win', dn_refund:'Double or Nothing refund', hail_mary:'Hail Mary', refund:'Refund', admin_adjustment:'Admin adjustment' };
+const ICON = {
+  play:'<path d="M4 6h16M4 12h16M4 18h10"/><circle cx="19" cy="18" r="2"/>',
+  shop:'<path d="M4 8h16l-1.5 11h-13z"/><path d="M9 8V6a3 3 0 016 0v2"/>',
+  hist:'<path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.3"/><path d="M3 4v4h4M12 7v5l3 2"/>',
+  board:'<path d="M8 21V11M12 21V5M16 21v-7M4 21h16"/>',
+  admin:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+};
+
+/* ================================================================ data layer */
+const cfg = window.GP_CONFIG || {};
+const sb = window.GP_MOCK || (window.supabase && cfg.url && !cfg.url.includes('YOUR-') ? window.supabase.createClient(cfg.url, cfg.anonKey) : null);
+const S = { me:null, players:[], matches:[], bets:[], ledger:[], items:[], purchases:[], hail:null, tab:'play', hist:'bets', admin:null };
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+const r1 = (x) => Math.round((x + Number.EPSILON) * 10) / 10;
+const gp = (x) => { const v = r1(Number(x)); return (Number.isInteger(v) ? v : v.toFixed(1)); };
+const sgn = (x) => (x > 0 ? '+' : x < 0 ? '−' : '') + gp(Math.abs(x));
+const P = (id) => S.players.find((p) => p.id === id) || { name:'?', id };
+const face = (id, size = 40) => `<img class="face" src="faces/${FACE[id] || 'x'}.jpg" width="${size}" height="${size}" style="width:${size}px;height:${size}px" alt="">`;
+const fmt = (d, o) => new Intl.DateTimeFormat('en-GB', { timeZone: TZ, ...o }).format(new Date(d));
+const when = (d) => fmt(d, { weekday:'short', day:'numeric', month:'short' }) + ' · ' + fmt(d, { hour:'2-digit', minute:'2-digit', hour12:false });
+const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); }));
+function until(d) {
+  const ms = new Date(d) - Date.now(); if (ms <= 0) return 'now';
+  const h = Math.floor(ms / 3.6e6), m = Math.floor(ms % 3.6e6 / 6e4);
+  return h >= 48 ? Math.floor(h / 24) + ' days' : h >= 1 ? `${h}h ${m}m` : `${m}m`;
+}
+async function q(p) { const { data, error } = await p; if (error) throw new Error(cleanErr(error.message)); return data; }
+const cleanErr = (m) => String(m || 'Something went wrong').replace(/^.*?ERROR:\s*/, '');
+const rpc = (fn, args) => q(sb.rpc(fn, args));
+
+async function load() {
+  S.me = await rpc('whoami');
+  if (!S.me) return false;
+  const id = S.me.id;
+  const [players, matches, bets, ledger, items, purchases, hail] = await Promise.all([
+    q(sb.from('v_leaderboard').select('*').order('balance', { ascending:false })),
+    q(sb.from('v_matches').select('*').order('kickoff')),
+    q(sb.from('bets').select('*').eq('player_id', id).order('id', { ascending:false })),
+    q(sb.from('ledger').select('*').eq('player_id', id).order('id', { ascending:false })),
+    q(sb.from('shop_items').select('*').order('sort')),
+    q(sb.from('purchases').select('*').or(`player_id.eq.${id},target_id.eq.${id}`).order('id', { ascending:false })),
+    q(sb.from('hail_mary').select('*').eq('player_id', id)),
+  ]);
+  Object.assign(S, { players, matches, bets, ledger, items, purchases, hail: hail[0] || null });
+  return true;
+}
+async function loadAdmin() {
+  const [bets, purchases, hail, ledger, log, players] = await Promise.all([
+    q(sb.from('bets').select('*').order('id', { ascending:false })),
+    q(sb.from('purchases').select('*').order('id', { ascending:false })),
+    q(sb.from('hail_mary').select('*')),
+    q(sb.from('ledger').select('*').order('id', { ascending:false }).limit(300)),
+    q(sb.from('admin_log').select('*').order('id', { ascending:false }).limit(100)),
+    q(sb.from('players').select('id,name,auth_uid,claimed_at,balance,streak,hail_mary_used,wa_admin').order('id')),
+  ]);
+  S.admin = { bets, purchases, hail, ledger, log, players };
+}
+async function refresh() { await load(); if (S.tab === 'admin') await loadAdmin(); render(); }
+
+/* ================================================================ payout estimate (mirrors the server) */
+function estimate(m, pick, stake, pw, streak) {
+  const o = Number(pick === m.p1 ? m.p1_odds : m.p2_odds);
+  const s = stake, N = s * o, n = N - s, k = streak + 1, sb_ = 0.5 * (k - 1) * n;
+  let raw = N;
+  if (pw === 'odds_boost') raw = s * (o + 0.5);
+  if (pw === 'double_profit') raw = N + n;
+  if (pw === 'underdog') raw = 2 * N;
+  if (pw === 'all_in') raw = N + Math.min(n, s);
+  if (pw === 'exact_score') raw = 5 * s;               // odds >= 1 x 5 always reaches the 5x cap
+  const cap = 5 * s, total = r1(Math.min(raw + sb_, cap));
+  return { o, total, capped: raw + sb_ > cap, streakBonus: r1(sb_), k, profit: r1(total - s) };
+}
+
+/* ================================================================ rendering */
+function toast(msg, bad) {
+  const t = document.createElement('div'); t.className = 'toast' + (bad ? ' bad' : ''); t.textContent = msg; t.setAttribute('role', 'status');
+  document.body.appendChild(t); setTimeout(() => t.remove(), bad ? 4200 : 2600);
+}
+function sheet(html) { $('#layer').innerHTML = `<div class="scrim" data-a="close"><div class="sheet" role="dialog" aria-modal="true">${html}</div></div>`; }
+function closeSheet() { $('#layer').innerHTML = ''; }
+
+function render() {
+  const main = $('#main');
+  if (!S.me) return;
+  $('#bal').hidden = false; $('#balv').textContent = gp(S.me.balance);
+  const tabs = [['play','Bet','play'],['shop','Shop','shop'],['hist','History','hist'],['board','Table','board']];
+  if (S.me.is_admin) tabs.push(['admin','Admin','admin']);
+  $('#tabs').hidden = false;
+  $('#tabsw').innerHTML = tabs.map(([k, l, ic]) => `<button class="tab${S.tab === k ? ' on' : ''}" data-a="tab" data-v="${k}" aria-current="${S.tab === k}"><svg viewBox="0 0 24 24">${ICON[ic]}</svg>${l}</button>`).join('');
+  main.innerHTML = ({ play: viewPlay, shop: viewShop, hist: viewHist, board: viewBoard, admin: viewAdmin })[S.tab]();
+}
+
+function matchCard(m) {
+  const b = S.bets.find((x) => x.match_id === m.id);
+  const fav = Math.max(m.p1_pct, m.p2_pct);
+  let status = '';
+  if (m.status === 'settled') status = `<span class="pill dim">FT · ${esc(P(m.winner).name)} 3–${m.loser_games}</span>`;
+  else if (m.status === 'void') status = '<span class="pill red">VOID</span>';
+  else if (m.betting_open) status = `<span class="pill">Locks in ${until(m.kickoff)}</span>`;
+  else status = '<span class="pill dim">Betting closed</span>';
+  const pws = m.powerups ? m.powerups.map((p) => `<span class="pill gold">⚡ ${PW[p].n}</span>`).join('') :
+    `<span class="pill dim">⚡ Power-up revealed ${until(m.reveal_at) === 'now' ? 'soon' : 'in ' + until(m.reveal_at)}</span>`;
+  let mine = '';
+  if (b) {
+    const res = b.status === 'won' ? `<span class="pill green">WON ${sgn(b.net)}</span>` : b.status === 'lost' ? `<span class="pill red">LOST ${sgn(b.net)}</span>` :
+      b.status === 'void' ? '<span class="pill dim">REFUNDED</span>' : '<span class="pill">🔒 LOCKED</span>';
+    mine = `<span class="pill gold">You: ${esc(P(b.pick).name)} · ${gp(b.stake)} GP${b.powerup ? ' · ' + PW[b.powerup].n : ''}</span>${res}`;
+  }
+  return `<button class="mcard" data-a="match" data-v="${m.id}">
+    <div class="mtop"><span class="kick">Group ${m.grp} · M${m.num} · ${when(m.kickoff)}</span>${status}</div>
+    <div class="vs">
+      <div class="side">${face(m.p1, 44)}<div style="min-width:0"><div class="nm">${esc(P(m.p1).name)}</div><div class="od"><b>${Number(m.p1_odds).toFixed(2)}</b> · ${m.p1_pct}%</div></div></div>
+      <div class="vsx">VS</div>
+      <div class="side r">${face(m.p2, 44)}<div style="min-width:0"><div class="nm">${esc(P(m.p2).name)}</div><div class="od">${m.p2_pct}% · <b>${Number(m.p2_odds).toFixed(2)}</b></div></div></div>
+    </div>
+    <div class="mfoot">${mine || (m.status === 'open' || m.status === 'closed' ? pws : '')}${fav >= 65 && !m.powerups && m.status === 'open' ? '' : ''}</div>
+  </button>`;
+}
+
+function viewPlay() {
+  const open = S.matches.filter((m) => m.betting_open);
+  const live = S.matches.filter((m) => !m.betting_open && (m.status === 'open' || m.status === 'closed'));
+  const done = S.matches.filter((m) => m.status === 'settled' || m.status === 'void').reverse();
+  const incoming = S.purchases.filter((p) => p.target_id === S.me.id && p.status === 'awaiting_target');
+  const hm = Number(S.me.balance) <= 10 && !S.me.hail_mary_used;
+  return `<div class="hero"><div class="kick">Welcome back</div><h1>${esc(S.me.name)}</h1>
+    <div class="row small muted" style="margin-top:8px;flex-wrap:wrap">${S.me.streak > 0 ? `<span class="pill gold">🔥 ${S.me.streak} win streak · next win +${gp(0.5 * S.me.streak)}× profit</span>` : '<span class="pill dim">No win streak yet</span>'}</div></div>
+    ${incoming.map((p) => `<div class="card" style="border-color:var(--gold)"><div class="row">${face(p.player_id, 40)}<div><div class="t" style="font-weight:700;color:#fff">${esc(P(p.player_id).name)} challenged you to Double or Nothing</div><div class="small muted">Rock, Paper, Scissors, best of three. Pick a wager of ${p.wager_min}–${p.wager_max} GP.</div></div></div><div style="margin-top:10px"><button class="btn gold sm" data-a="dn" data-v="${p.id}">Answer</button></div></div>`).join('')}
+    ${hm ? `<div class="card" style="border-color:var(--gold)"><div class="kick gold">Hail Mary unlocked</div><div style="margin-top:6px">You're on ${gp(S.me.balance)} GP. Get 50 GP free: send the group a real video of you singing 10 seconds of a song they choose. One use, ever.</div><div style="margin-top:10px"><button class="btn gold sm" data-a="shoptab">Go to the shop</button></div></div>` : ''}
+    <h2>Open for betting</h2>${open.length ? open.map(matchCard).join('') : '<div class="empty">No matches open right now.</div>'}
+    ${live.length ? `<h2>Waiting for result</h2>${live.map(matchCard).join('')}` : ''}
+    ${done.length ? `<h2>Results</h2>${done.map(matchCard).join('')}` : ''}`;
+}
+
+/* ---------- bet sheet */
+let B = null;
+async function openMatch(id) {
+  const m = S.matches.find((x) => x.id === id);
+  const bet = S.bets.find((x) => x.match_id === id);
+  if (bet || !m.betting_open) return sheetBetInfo(m, bet);
+  let snap = null;
+  try { snap = await rpc('open_match', { p_match: id }); } catch (e) { return toast(e.message, true); }
+  B = { m, snap, pick: null, pw: null, stake: '', lg: null, busy: false, confirm: false };
+  drawBet();
+}
+function sheetBetInfo(m, b) {
+  const lines = b ? `
+    <div class="kv"><span>Your pick</span><span>${esc(P(b.pick).name)}${b.loser_games != null ? ` (3–${b.loser_games})` : ''}</span></div>
+    <div class="kv"><span>Stake</span><span>${gp(b.stake)} GP${b.powerup === 'free_stake' ? ' (free)' : ''}</span></div>
+    <div class="kv"><span>Odds locked</span><span>${Number(b.odds).toFixed(2)}${b.exact_odds ? ` · exact ${Number(b.exact_odds).toFixed(2)}` : ''}</span></div>
+    <div class="kv"><span>Power-up</span><span>${b.powerup ? PW[b.powerup].n : 'None'}</span></div>
+    ${b.insurance_fee > 0 ? `<div class="kv"><span>Insurance fee</span><span>${gp(b.insurance_fee)} GP</span></div>` : ''}
+    <div class="kv"><span>Status</span><span>${b.status.toUpperCase()}</span></div>
+    ${b.payout != null ? `<div class="kv"><span>Total payout</span><span>${gp(b.payout)} GP</span></div><div class="kv"><span>Net</span><span class="${b.net >= 0 ? 'green' : 'red'}">${sgn(b.net)} GP</span></div>` : ''}
+    <div class="kv"><span>Placed</span><span>${when(b.created_at)}</span></div>` : '<div class="empty">You did not bet on this match.</div>';
+  sheet(`<button class="x" data-a="close" aria-label="Close">×</button><div class="kick">Group ${m.grp} · M${m.num}</div>
+    <h2 style="margin-top:4px">${esc(P(m.p1).name)} v ${esc(P(m.p2).name)}</h2>${lines}
+    ${!b && !m.betting_open && m.status !== 'settled' && m.status !== 'void' ? '<p class="small muted">Betting closed at kick-off.</p>' : ''}`);
+}
+function drawBet() {
+  const { m, snap } = B; const bal = Number(S.me.balance);
+  const pws = m.powerups || [];
+  let stake = Number(B.stake) || 0;
+  if (B.pw === 'all_in') stake = Number(snap.all_in_stake);
+  if (B.pw === 'free_stake') stake = Number(snap.free_stake);
+  const fee = B.pw === 'insurance' ? r1(stake * 0.05) : 0;
+  const und = m.p1_pct === m.p2_pct ? null : (m.p1_pct < m.p2_pct ? m.p1 : m.p2);
+  let problem = '';
+  if (!B.pick) problem = 'Pick a winner';
+  else if (B.pw === 'underdog' && B.pick !== und) problem = 'Underdog Challenge: back the underdog';
+  else if (B.pw === 'underdog' && Math.max(m.p1_pct, m.p2_pct) < 65) problem = 'Underdog Challenge needs a 65%+ favourite';
+  else if (B.pw === 'exact_score' && B.lg == null) problem = 'Pick the exact score';
+  else if (!(stake > 0)) problem = 'Enter a stake';
+  else if (B.pw !== 'free_stake' && stake + fee > bal) problem = `You only have ${gp(bal)} GP`;
+  const e = B.pick && stake > 0 ? estimate(m, B.pick, stake, B.pw, S.me.streak) : null;
+  const pctChips = [[0.1,'10%'],[0.25,'25%'],[0.5,'50%'],[1,'ALL IN']];
+  const fixedStake = B.pw === 'all_in' || B.pw === 'free_stake';
+  sheet(`<button class="x" data-a="close" aria-label="Close">×</button>
+    <div class="kick">Group ${m.grp} · M${m.num} · locks ${when(m.kickoff)}</div>
+    <h2 style="margin-top:4px">Who wins?</h2>
+    <div class="choose">${[m.p1, m.p2].map((id) => { const o = id === m.p1 ? m.p1_odds : m.p2_odds, pc = id === m.p1 ? m.p1_pct : m.p2_pct;
+      return `<button class="opt${B.pick === id ? ' on' : ''}" data-a="pick" data-v="${id}" aria-pressed="${B.pick === id}">${face(id, 64)}<span class="nm">${esc(P(id).name)}</span><span class="small muted">${pc}% · pays <b class="cyan">${Number(o).toFixed(2)}×</b></span></button>`; }).join('')}</div>
+    <h2>Power-up</h2>
+    ${pws.length ? `<button class="pw${!B.pw ? ' on' : ''}" data-a="pw" data-v=""><span class="ic">–</span><div><div class="t">No power-up</div><div class="d">Standard odds. Your win streak still applies.</div></div></button>` +
+      pws.map((p) => `<button class="pw${B.pw === p ? ' on' : ''}" data-a="pw" data-v="${p}" aria-pressed="${B.pw === p}"><span class="ic">${PW[p].ic}</span><div><div class="t">${PW[p].n}</div><div class="d">${PW[p].d}${p === 'all_in' ? ` <b class="gold">Your stake: ${gp(snap.all_in_stake)} GP</b> (50% of ${gp(snap.balance)}).` : ''}${p === 'free_stake' ? ` <b class="gold">Your free stake: ${gp(snap.free_stake)} GP.</b>` : ''}${p === 'underdog' && und ? ` Underdog: <b>${esc(P(und).name)}</b>.` : ''}</div></div></button>`).join('')
+      : `<div class="empty">${m.powerups ? 'No power-up for this match.' : `This match's power-up is revealed 1 hour before kick-off (in ${until(m.reveal_at)}). Bet now without it, or come back for the reveal and watch live on Discord.`}</div>`}
+    ${B.pw === 'exact_score' && B.pick ? `<label class="f">Exact score (${esc(P(B.pick).name)} wins…)</label><div class="chips">${[0,1,2].map((g) => `<button class="chip${B.lg === g ? ' on' : ''}" data-a="lg" data-v="${g}">3–${g}</button>`).join('')}</div>` : ''}
+    <h2>Stake</h2>
+    ${fixedStake ? `<div class="calc" style="margin-top:0;border-style:solid"><div class="kv"><span>${PW[B.pw].n} stake</span><span class="gold" style="font-weight:800">${gp(stake)} GP</span></div><div class="small muted">Set by the power-up. Based on the ${gp(snap.balance)} GP you had when you opened this match.</div></div>` :
+      `<input class="in" id="stake" inputmode="decimal" placeholder="GP to stake (you have ${gp(bal)})" value="${esc(B.stake)}" aria-label="Stake in GP">
+       <div class="chips">${pctChips.map(([f, l]) => `<button class="chip" data-a="pct" data-v="${f}">${l}</button>`).join('')}</div>`}
+    ${e ? `<div class="calc"><div class="kick">If ${esc(P(B.pick).name)} wins${B.pw === 'exact_score' ? ` 3–${B.lg ?? '?'}` : ''}</div>
+      <div class="big">${B.pw === 'free_stake' ? '+' + gp(e.profit) : gp(e.total)} GP</div>
+      <div class="kv"><span>${B.pw === 'free_stake' ? 'Profit credited (stake is free)' : 'Total payout, incl. your stake'}</span><span>${e.capped ? '<span class="pill gold">5× cap</span>' : ''}</span></div>
+      ${e.streakBonus > 0 && B.pw !== 'exact_score' ? `<div class="kv"><span>🔥 Streak bonus (win #${e.k} in a row)</span><span>+${gp(e.streakBonus)}</span></div>` : ''}
+      ${B.pw === 'exact_score' ? '<div class="kv"><span>Exact-score odds</span><span>set by admin before settlement</span></div>' : ''}
+      ${fee ? `<div class="kv"><span>Insurance fee (now)</span><span>−${gp(fee)} GP</span></div><div class="kv"><span>If you lose, you get back</span><span>${gp(r1(stake * 0.35))} GP</span></div>` : ''}
+      <div class="kv"><span>If you lose</span><span>${B.pw === 'free_stake' ? 'nothing lost' : B.pw === 'insurance' ? '−' + gp(r1(stake + fee - stake * 0.35)) + ' GP net' : '−' + gp(stake) + ' GP'}</span></div></div>` : ''}
+    <div class="err" id="berr">${B.err ? esc(B.err) : ''}</div>
+    <button class="btn gold block" style="margin-top:8px" data-a="${B.confirm ? 'lock' : 'review'}" ${problem || B.busy ? 'disabled' : ''}>${problem ? esc(problem) : B.busy ? 'Locking…' : B.confirm ? '🔒 Confirm and lock' : 'Place bet'}</button>
+    ${B.confirm && !problem ? '<p class="small muted" style="text-align:center;margin:8px 0 0">Bets lock right away and can’t be changed or cancelled.</p>' : ''}`);
+  const st = $('#stake'); if (st) st.addEventListener('input', () => { B.stake = st.value.replace(',', '.'); B.confirm = false; const pos = st.selectionStart; drawBet(); const n = $('#stake'); n.focus(); n.setSelectionRange(pos, pos); });
+}
+async function lockBet() {
+  const { m, snap } = B; B.busy = true; B.err = ''; drawBet();
+  let stake = Number(B.stake);
+  if (B.pw === 'all_in') stake = Number(snap.all_in_stake);
+  if (B.pw === 'free_stake') stake = Number(snap.free_stake);
+  try {
+    await rpc('place_bet', { p_match: m.id, p_pick: B.pick, p_stake: stake, p_powerup: B.pw || null, p_loser_games: B.pw === 'exact_score' ? B.lg : null });
+    closeSheet(); toast('Bet locked 🔒'); await refresh();
+  } catch (e) { B.busy = false; B.confirm = false; B.err = e.message; drawBet(); }
+}
+
+/* ---------- shop */
+function viewShop() {
+  const bal = Number(S.me.balance);
+  const hmEligible = bal <= 10 && !S.me.hail_mary_used;
+  const hmState = S.me.hail_mary_used ? 'used' : S.hail?.status === 'requested' ? 'requested' : hmEligible ? 'open' : 'locked';
+  const mine = S.purchases.filter((p) => p.player_id === S.me.id);
+  return `<div class="hero"><div class="kick">Spend your GP</div><h1>The Shop</h1><p class="small muted" style="margin:8px 0 0">Social privileges only. Nothing here changes odds or results. An admin carries out each purchase in WhatsApp or Discord.</p></div>
+    <div class="card" style="${hmState === 'open' ? 'border-color:var(--gold)' : ''}"><div class="row" style="justify-content:space-between"><div><div class="kick gold">Hail Mary · free</div><div style="font-family:var(--display);font-weight:800;font-size:22px;color:#fff">+50 GP comeback</div></div><span class="pill ${hmState === 'open' ? 'gold' : 'dim'}">${{ open:'Available', requested:'Waiting for admin', used:'Used', locked:'At 10 GP or less' }[hmState]}</span></div>
+      <p class="small muted" style="margin:8px 0 0">Send the group a real (non-AI) video of yourself singing 10 seconds of a song the others choose. Once an admin confirms it, you get 50 GP. One use per player.</p>
+      ${hmState === 'open' ? '<button class="btn gold sm" style="margin-top:10px" data-a="hail">I sent my video</button>' : ''}</div>
+    <div class="shop">${S.items.map((it) => {
+      const owned = it.one_per_player && mine.some((p) => p.item_id === it.id && p.status !== 'cancelled');
+      const can = it.price == null ? bal >= 1 : bal >= Number(it.price);
+      return `<button class="item${can && !owned ? '' : ' no'}" data-a="item" data-v="${it.id}"><div class="n">${esc(it.name)}</div><div class="d">${esc(it.description)}</div><div class="p">${owned ? 'OWNED' : it.price == null ? 'You set the price' : gp(it.price) + ' GP'}</div></button>`; }).join('')}</div>
+    <h2>Your purchases</h2>
+    <div class="card">${mine.length ? mine.map(purchaseLine).join('') : '<div class="empty">Nothing yet.</div>'}</div>`;
+}
+function purchaseLine(p) {
+  const it = S.items.find((i) => i.id === p.item_id) || {};
+  const st = { pending:['Waiting for admin','gold'], fulfilled:['Done','green'], cancelled:['Cancelled · refunded','dim'], awaiting_target:['Waiting for ' + P(p.target_id).name,'gold'],
+    accepted:[`Wager ${p.wager} GP · play it out`,'gold'], declined:['Declined','red'], settled:[p.winner_id ? P(p.winner_id).name + ' won' : 'Settled','green'] }[p.status] || [p.status,'dim'];
+  return `<div class="li">${p.target_id ? face(p.target_id, 34) : ''}<div><div class="t">${esc(it.name)}${p.target_id ? ' → ' + esc(P(p.target_id).name) : ''}</div><div class="s">${when(p.created_at)}${p.details ? ' · ' + esc(p.details) : ''}</div></div><div class="amt"><div class="gold">−${gp(p.price)}</div><span class="pill ${st[1]}">${esc(st[0])}</span></div></div>`;
+}
+let BUY = null;
+function openItem(id) {
+  const it = S.items.find((i) => i.id === id);
+  BUY = { it, target: null, details: '', price: '', err: '', busy: false, rq: uuid() };
+  drawBuy();
+}
+function drawBuy() {
+  const { it } = BUY; const bal = Number(S.me.balance);
+  const owned = it.one_per_player && S.purchases.some((p) => p.player_id === S.me.id && p.item_id === it.id && p.status !== 'cancelled');
+  const price = it.price == null ? Math.floor(Number(BUY.price) || 0) : Number(it.price);
+  const others = S.players.filter((p) => p.id !== S.me.id);
+  let problem = '';
+  if (owned) problem = 'You already own this';
+  else if (it.target === 'choose' && !BUY.target) problem = 'Choose a player';
+  else if (it.detail_label && !BUY.details.trim()) problem = it.detail_label;
+  else if (it.price == null && price < 1) problem = 'Set a price';
+  else if (price > bal) problem = `Costs ${gp(price)} GP, you have ${gp(bal)}`;
+  sheet(`<button class="x" data-a="close" aria-label="Close">×</button><div class="kick gold">${it.price == null ? 'Variable price' : gp(it.price) + ' GP'}</div>
+    <h2 style="margin-top:4px">${esc(it.name)}</h2><p class="small" style="line-height:1.45">${esc(it.description)}</p>
+    ${it.target === 'choose' ? `<label class="f">Target</label><div class="choose" style="grid-template-columns:repeat(3,1fr)">${others.map((p) => `<button class="opt${BUY.target === p.id ? ' on' : ''}" data-a="tgt" data-v="${p.id}" style="padding:8px 4px">${face(p.id, 44)}<span class="small" style="font-weight:700;color:#fff">${esc(p.name)}</span></button>`).join('')}</div>` : ''}
+    ${it.target === 'random' ? '<p class="small muted">The wheel spins on the server when you buy, so nobody can reroll. Everyone sees who it lands on.</p>' : ''}
+    ${it.price == null ? `<label class="f" for="dnp">Your price (GP)</label><input class="in" id="dnp" inputmode="numeric" value="${esc(BUY.price)}" placeholder="e.g. 12">
+      ${price >= 1 ? `<p class="small muted">${BUY.target ? esc(P(BUY.target).name) : 'They'} will choose a wager between <b class="gold">${Math.ceil(price / 3)}</b> and <b class="gold">${price}</b> GP. The ${price} GP price is your fee to start the challenge; the winner takes the wager. An admin confirms the winner.</p>` : ''}` : ''}
+    ${it.detail_label ? `<label class="f" for="det">${esc(it.detail_label)}</label><textarea class="in" id="det" maxlength="300">${esc(BUY.details)}</textarea>` : ''}
+    <div class="err">${esc(BUY.err)}</div>
+    <button class="btn gold block" data-a="buy" ${problem || BUY.busy ? 'disabled' : ''}>${problem ? esc(problem) : BUY.busy ? 'Buying…' : `Buy for ${gp(price)} GP`}</button>`);
+  const d = $('#det'); if (d) d.addEventListener('input', () => { BUY.details = d.value; const b = $('[data-a="buy"]'); if (b && it.detail_label) { const ok = BUY.details.trim(); if (!ok !== !!b.disabled || true) { const pos = d.selectionStart; drawBuy(); const n = $('#det'); n.focus(); n.setSelectionRange(pos, pos); } } });
+  const pr = $('#dnp'); if (pr) pr.addEventListener('input', () => { BUY.price = pr.value.replace(/\D/g, ''); const pos = pr.selectionStart; drawBuy(); const n = $('#dnp'); n.focus(); n.setSelectionRange(pos, pos); });
+}
+async function doBuy() {
+  const { it } = BUY; BUY.busy = true; BUY.err = ''; drawBuy();
+  try {
+    const p = await rpc('buy_item', { p_request: BUY.rq, p_item: it.id, p_target: BUY.target, p_details: BUY.details || null, p_price: it.price == null ? Math.floor(Number(BUY.price)) : null });
+    await refresh();
+    if (it.target === 'random') return spinReveal(p.target_id);
+    closeSheet(); toast(`${it.name} bought. An admin will sort it out.`);
+  } catch (e) { BUY.busy = false; BUY.err = e.message; BUY.rq = uuid(); drawBuy(); }
+}
+function spinReveal(target) {
+  const ps = S.players.filter((p) => p.id !== S.me.id);
+  const seg = 360 / ps.length, idx = ps.findIndex((p) => p.id === target);
+  const cols = ['#1f4fd1','#c81d34','#e8b923','#0f7b4a','#7c3aed','#0891b2','#c2410c','#be185d','#4d7c0f'];
+  const grad = ps.map((p, i) => `${cols[i % cols.length]} ${i * seg}deg ${(i + 1) * seg}deg`).join(',');
+  sheet(`<div class="kick" style="text-align:center">Spin the Wheel</div><div class="wptr"></div><div class="wheel" id="wh" style="background:conic-gradient(${grad})"></div>
+    <div id="wres" style="text-align:center;min-height:90px;opacity:0;transition:opacity .4s">${face(target, 56)}<h2 style="margin:6px 0 0">${esc(P(target).name)}</h2><p class="small muted">Send them your Truth or Dare in the group.</p></div>
+    <button class="btn block" data-a="close">Done</button>`);
+  requestAnimationFrame(() => requestAnimationFrame(() => { $('#wh').style.transform = `rotate(${360 * 6 - (idx * seg + seg / 2)}deg)`; }));
+  setTimeout(() => { const r = $('#wres'); if (r) r.style.opacity = 1; }, 3300);
+}
+function openDn(id) {
+  const p = S.purchases.find((x) => x.id === id);
+  const max = Math.min(p.wager_max, Math.floor(Number(S.me.balance)));
+  sheet(`<button class="x" data-a="close" aria-label="Close">×</button><div class="kick gold">Double or Nothing</div>
+    <h2 style="margin-top:4px">${esc(P(p.player_id).name)} wants to play</h2>
+    <p class="small" style="line-height:1.45">Rock, Paper, Scissors, best of three. You choose the wager: between <b class="gold">${p.wager_min}</b> and <b class="gold">${p.wager_max}</b> GP. Both of you put it in; the winner takes it all. An admin confirms the result.</p>
+    ${max < p.wager_min ? `<p class="red small">You have ${gp(S.me.balance)} GP, below the ${p.wager_min} GP minimum.</p>` : `<label class="f" for="dnw">Your wager (GP)</label><input class="in" id="dnw" inputmode="numeric" value="${p.wager_min}">`}
+    <div class="err" id="dnerr"></div>
+    <div class="grid2" style="margin-top:6px"><button class="btn ghost" data-a="dndecline" data-v="${p.id}">Decline</button><button class="btn gold" data-a="dnaccept" data-v="${p.id}" ${max < p.wager_min ? 'disabled' : ''}>Accept</button></div>`);
+}
+
+/* ---------- history */
+function viewHist() {
+  const settled = (b) => b.status !== 'locked';
+  const tot = S.bets.filter(settled).reduce((a, b) => a + Number(b.net || 0), 0);
+  const body = S.hist === 'bets' ? (S.bets.length ? S.bets.map((b) => {
+    const m = S.matches.find((x) => x.id === b.match_id) || {};
+    const after = b.status !== 'locked' ? S.ledger.filter((l) => l.bet_id === b.id).sort((a, c) => c.id - a.id)[0] : null;
+    return `<div class="li">${face(b.pick, 36)}<div style="min-width:0"><div class="t">${esc(P(b.pick).name)}${b.loser_games != null ? ` 3–${b.loser_games}` : ''} <span class="small muted">@ ${Number(b.odds).toFixed(2)}</span></div>
+      <div class="s">M${esc(m.grp)}${m.num} · ${m.kickoff ? when(m.kickoff) : ''} · ${gp(b.stake)} GP${b.powerup ? ' · ' + PW[b.powerup].n : ''}${after ? ' · balance ' + gp(after.balance_after) : ''}</div></div>
+      <div class="amt">${b.status === 'locked' ? '<span class="pill">🔒 Locked</span>' : `<div class="${b.net > 0 ? 'green' : b.net < 0 ? 'red' : 'muted'}">${sgn(b.net)}</div><div class="small muted" style="font-family:var(--body);font-weight:500">${b.status === 'void' ? 'void' : 'paid ' + gp(b.payout)}</div>`}</div></div>`; }).join('') : '<div class="empty">No bets yet.</div>')
+    : (S.ledger.length ? S.ledger.map((l) => `<div class="li"><div style="min-width:0"><div class="t">${KIND[l.kind] || l.kind}</div><div class="s">${when(l.created_at)}${l.note ? ' · ' + esc(l.note) : ''}</div></div>
+      <div class="amt"><div class="${l.amount > 0 ? 'green' : 'red'}">${sgn(l.amount)}</div><div class="small muted" style="font-family:var(--body);font-weight:500">= ${gp(l.balance_after)}</div></div></div>`).join('') : '<div class="empty">No transactions.</div>');
+  return `<div class="hero"><div class="kick">Only you can see this</div><h1>History</h1>
+    <div class="row" style="margin-top:10px;gap:8px;flex-wrap:wrap"><span class="pill gold">${S.bets.length} bets</span><span class="pill ${tot >= 0 ? 'green' : 'red'}">Betting ${sgn(tot)} GP</span></div></div>
+    <div class="seg" role="tablist"><button class="${S.hist === 'bets' ? 'on' : ''}" data-a="hist" data-v="bets">Bets</button><button class="${S.hist === 'tx' ? 'on' : ''}" data-a="hist" data-v="tx">Transactions</button></div>
+    <div class="card">${body}</div>`;
+}
+function viewBoard() {
+  return `<div class="hero"><div class="kick">Balances only · bets stay private</div><h1>The Table</h1></div>
+    <div class="card board">${S.players.map((p, i) => `<div class="li"><span class="rk">${i + 1}</span>${face(p.id, 40)}<div><div class="t">${esc(p.name)}${p.id === S.me.id ? ' <span class="pill" style="margin-left:4px">You</span>' : ''}</div><div class="s">Group ${p.grp}${p.streak > 1 ? ' · 🔥 ' + p.streak + ' streak' : ''}${p.wa_admin ? ' · WhatsApp admin' : ''}</div></div><div class="amt gold">${gp(p.balance)}</div></div>`).join('')}</div>
+    <p class="small muted" style="text-align:center">Starting supply: 500 GP · now in play: ${gp(S.players.reduce((a, p) => a + Number(p.balance), 0))} GP</p>`;
+}
+
+/* ---------- admin */
+function viewAdmin() {
+  const A = S.admin; if (!A) { loadAdmin().then(render).catch((e) => toast(e.message, true)); return '<div class="spinner"></div>'; }
+  const pend = A.purchases.filter((p) => p.status === 'pending');
+  const dn = A.purchases.filter((p) => ['awaiting_target','accepted','declined'].includes(p.status));
+  const hm = A.hail.filter((h) => h.status === 'requested');
+  const iname = (id) => (S.items.find((i) => i.id === id) || {}).name;
+  const matchesNeedingAction = S.matches.filter((m) => m.status === 'open' || m.status === 'closed');
+  return `<div class="hero"><div class="kick">Commissioner's desk</div><h1>Admin</h1>
+    <div class="row" style="margin-top:10px;gap:8px;flex-wrap:wrap"><span class="pill gold">${pend.length} to fulfil</span><span class="pill gold">${dn.length} Double or Nothing</span><span class="pill gold">${hm.length} Hail Mary</span>
+    <button class="btn ghost sm" data-a="refresh">Refresh</button></div></div>
+    ${hm.length ? `<h2>Hail Mary requests</h2><div class="card">${hm.map((h) => `<div class="li">${face(h.player_id, 36)}<div><div class="t">${esc(P(h.player_id).name)}</div><div class="s">Requested ${when(h.requested_at)} · check the video in WhatsApp</div></div><div class="amt row" style="gap:6px"><button class="btn sm ghost" data-a="hmno" data-v="${h.player_id}">Reject</button><button class="btn sm gold" data-a="hmyes" data-v="${h.player_id}">Award 50</button></div></div>`).join('')}</div>` : ''}
+    <h2>Shop queue</h2><div class="card">${pend.length ? pend.map((p) => `<div class="li" style="flex-wrap:wrap">${face(p.player_id, 34)}<div style="flex:1;min-width:180px"><div class="t">${esc(P(p.player_id).name)} · ${esc(iname(p.item_id))}${p.target_id ? ' → ' + esc(P(p.target_id).name) : ''}</div><div class="s">${when(p.created_at)} · ${gp(p.price)} GP${p.details ? ' · “' + esc(p.details) + '”' : ''}</div></div><div class="row" style="gap:6px"><button class="btn sm ghost" data-a="pcancel" data-v="${p.id}">Cancel + refund</button><button class="btn sm gold" data-a="pdone" data-v="${p.id}">Done</button></div></div>`).join('') : '<div class="empty">Nothing waiting.</div>'}</div>
+    ${dn.length ? `<h2>Double or Nothing</h2><div class="card">${dn.map((p) => `<div class="li" style="flex-wrap:wrap"><div style="flex:1;min-width:180px"><div class="t">${esc(P(p.player_id).name)} v ${esc(P(p.target_id).name)}</div><div class="s">Fee ${gp(p.price)} · ${p.status === 'accepted' ? 'wager ' + p.wager + ' GP each, held' : p.status === 'declined' ? 'declined by target' : `waiting for target (range ${p.wager_min}–${p.wager_max})`} · ${when(p.created_at)}</div></div><div class="row" style="gap:6px;flex-wrap:wrap">
+      ${p.status === 'accepted' ? `<button class="btn sm gold" data-a="dnwin" data-v="${p.id}" data-w="${p.player_id}">${esc(P(p.player_id).name)} won</button><button class="btn sm gold" data-a="dnwin" data-v="${p.id}" data-w="${p.target_id}">${esc(P(p.target_id).name)} won</button>` : ''}
+      <button class="btn sm ghost" data-a="dncancel" data-v="${p.id}">Cancel…</button></div></div>`).join('')}</div>` : ''}
+    <h2>Matches</h2>${matchesNeedingAction.map((m) => adminMatch(m, A)).join('') || '<div class="empty">All matches settled.</div>'}
+    <details class="ad"><summary><b>Settled & void matches</b></summary><div>${S.matches.filter((m) => m.status === 'settled' || m.status === 'void').map((m) => `<div class="li"><div><div class="t">M${m.grp}${m.num} ${esc(P(m.p1).name)} v ${esc(P(m.p2).name)}</div><div class="s">${m.status === 'void' ? 'VOID' : esc(P(m.winner).name) + ' 3–' + m.loser_games} · ${A.bets.filter((b) => b.match_id === m.id).length} bets</div></div></div>`).join('') || '<div class="empty">None yet.</div>'}</div></details>
+    <h2>Players</h2><div class="card">${A.players.map((p) => `<div class="li">${face(p.id, 34)}<div><div class="t">${esc(p.name)}</div><div class="s">${p.auth_uid ? 'Signed up ' + when(p.claimed_at) : 'Not signed up yet'} · streak ${p.streak}${p.hail_mary_used ? ' · Hail Mary used' : ''}${p.wa_admin ? ' · WA admin' : ''}</div></div><div class="amt"><div class="gold">${gp(p.balance)}</div>${p.auth_uid ? `<button class="btn sm ghost" style="margin-top:4px" data-a="unlink" data-v="${p.id}">Unlink</button>` : ''}</div></div>`).join('')}</div>
+    <h2>Adjust a balance</h2><div class="card"><div class="grid2"><div><label class="f" for="adjp">Player</label><select class="in" id="adjp">${A.players.map((p) => `<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div><div><label class="f" for="adja">Amount (+/−)</label><input class="in" id="adja" inputmode="decimal" placeholder="-5 or 10"></div></div>
+      <label class="f" for="adjr">Reason (shown in their history)</label><input class="in" id="adjr" placeholder="e.g. Correction: wrong result entered"><button class="btn gold block" style="margin-top:12px" data-a="adjust">Post adjustment</button></div>
+    <details class="ad"><summary><b>All bets</b> <span class="muted small">${A.bets.length}</span></summary><div class="scrollx"><table class="t"><tr><th>#</th><th>Player</th><th>Match</th><th>Pick</th><th>Stake</th><th>Odds</th><th>Power-up</th><th>Status</th><th>Net</th></tr>
+      ${A.bets.map((b) => { const m = S.matches.find((x) => x.id === b.match_id) || {}; return `<tr><td>${b.id}</td><td>${esc(P(b.player_id).name)}</td><td>${m.grp}${m.num}</td><td>${esc(P(b.pick).name)}${b.loser_games != null ? ' 3–' + b.loser_games : ''}</td><td>${gp(b.stake)}</td><td>${Number(b.odds).toFixed(2)}${b.exact_odds ? '/' + b.exact_odds : ''}</td><td>${b.powerup ? PW[b.powerup].n : ''}</td><td>${b.status}</td><td>${b.net != null ? sgn(b.net) : ''}</td></tr>`; }).join('')}</table></div></details>
+    <details class="ad"><summary><b>Ledger</b> <span class="muted small">latest 300</span></summary><div class="scrollx"><table class="t"><tr><th>When</th><th>Player</th><th>Type</th><th>GP</th><th>After</th><th>Note</th></tr>
+      ${A.ledger.map((l) => `<tr><td>${when(l.created_at)}</td><td>${esc(P(l.player_id).name)}</td><td>${KIND[l.kind] || l.kind}</td><td class="${l.amount > 0 ? 'green' : 'red'}">${sgn(l.amount)}</td><td>${gp(l.balance_after)}</td><td>${esc(l.note || '')}</td></tr>`).join('')}</table></div></details>
+    <details class="ad"><summary><b>Admin log</b></summary><div class="scrollx"><table class="t"><tr><th>When</th><th>Who</th><th>Action</th><th>Details</th></tr>
+      ${A.log.map((l) => `<tr><td>${when(l.created_at)}</td><td>${esc(l.admin_name || '')}</td><td>${esc(l.action)}</td><td style="font-family:ui-monospace,monospace;font-size:11px">${esc(JSON.stringify(l.payload))}</td></tr>`).join('')}</table></div></details>`;
+}
+function adminMatch(m, A) {
+  const bets = A.bets.filter((b) => b.match_id === m.id);
+  const ex = bets.filter((b) => b.powerup === 'exact_score' && b.status === 'locked');
+  const local = fmt(m.kickoff, { year:'numeric' }) + '-' + fmt(m.kickoff, { month:'2-digit' }) + '-' + fmt(m.kickoff, { day:'2-digit' }) + 'T' + fmt(m.kickoff, { hour:'2-digit', minute:'2-digit', hour12:false });
+  return `<details class="ad" id="am${m.id}"><summary>${face(m.p1, 28)}${face(m.p2, 28)}<div style="flex:1;min-width:0"><div style="font-weight:700;color:#fff">M${m.grp}${m.num} · ${esc(P(m.p1).name)} v ${esc(P(m.p2).name)}</div><div class="small muted">${when(m.kickoff)} · ${bets.length} bets · ${m.betting_open ? 'betting open' : m.status === 'closed' ? 'closed by admin' : 'kicked off'}</div></div></summary><div>
+    <div class="grid2"><div><label class="f">${esc(P(m.p1).name)} win %</label><input class="in" id="pct${m.id}" inputmode="numeric" value="${m.p1_pct}"></div><div><label class="f">Kick-off (Beirut)</label><input class="in" id="ko${m.id}" type="datetime-local" value="${local}"></div></div>
+    <div class="row" style="flex-wrap:wrap;gap:6px;margin-top:10px"><button class="btn sm" data-a="msave" data-v="${m.id}">Save odds/time</button>
+      <button class="btn sm ghost" data-a="mstatus" data-v="${m.id}" data-s="${m.status === 'open' ? 'closed' : 'open'}">${m.status === 'open' ? 'Close betting' : 'Reopen betting'}</button>
+      <button class="btn sm ghost" data-a="mreveal" data-v="${m.id}" ${m.revealed ? 'disabled' : ''}>${m.revealed ? 'Power-up revealed' : 'Reveal power-up now'}</button></div>
+    <p class="small muted">Power-up: <b class="gold">${(m.powerups || []).map((p) => PW[p].n).join(' or ') || 'none'}</b> · auto-reveals ${when(m.reveal_at)}. Changing % only affects new bets.</p>
+    ${ex.length ? `<label class="f">Exact-score odds (needed before settling)</label>${ex.map((b) => `<div class="row" style="margin-bottom:6px"><span class="small" style="flex:1">${esc(P(b.player_id).name)}: ${esc(P(b.pick).name)} 3–${b.loser_games}, ${gp(b.stake)} GP</span><input class="in" style="width:90px;min-height:40px" id="ex${b.id}" inputmode="decimal" value="${b.exact_odds ?? ''}" placeholder="odds"><button class="btn sm" data-a="exsave" data-v="${b.id}">Save</button></div>`).join('')}` : ''}
+    <label class="f">Result</label><div class="grid2"><select class="in" id="w${m.id}"><option value="">Winner…</option><option value="${m.p1}">${esc(P(m.p1).name)}</option><option value="${m.p2}">${esc(P(m.p2).name)}</option></select>
+      <select class="in" id="lg${m.id}"><option value="">Score…</option><option value="0">3–0</option><option value="1">3–1</option><option value="2">3–2</option></select></div>
+    <div class="grid2" style="margin-top:10px"><button class="btn ghost" data-a="mvoid" data-v="${m.id}">Void match</button><button class="btn gold" data-a="msettle" data-v="${m.id}">Settle bets</button></div>
+    ${bets.length ? `<div class="scrollx" style="margin-top:10px"><table class="t"><tr><th>Player</th><th>Pick</th><th>Stake</th><th>Power-up</th></tr>${bets.map((b) => `<tr><td>${esc(P(b.player_id).name)}</td><td>${esc(P(b.pick).name)}${b.loser_games != null ? ' 3–' + b.loser_games : ''}</td><td>${gp(b.stake)}</td><td>${b.powerup ? PW[b.powerup].n : ''}</td></tr>`).join('')}</table></div>` : ''}
+  </div></details>`;
+}
+
+/* ================================================================ auth screens */
+let AUTH = { mode:'in', err:'', busy:false };
+function viewAuth() {
+  $('#tabs').hidden = true; $('#bal').hidden = true;
+  const ready = !!sb;
+  $('#main').innerHTML = `<div class="hero" style="padding-top:40px"><div class="kick">Gauntlet GP · Season 2026</div><h1>Bet. Boost.<br>Brag.</h1><p class="muted" style="margin:10px 0 0">50 GP each. Bet on every match, use match-day power-ups, buy chaos in the shop.</p></div>
+    ${!ready ? '<div class="card red">This site is not connected to its database yet (config.js).</div>' : ''}
+    <div class="card" style="margin-top:16px"><div class="seg"><button class="${AUTH.mode === 'in' ? 'on' : ''}" data-a="amode" data-v="in">Sign in</button><button class="${AUTH.mode === 'up' ? 'on' : ''}" data-a="amode" data-v="up">First time</button></div>
+    <form id="authf" autocomplete="on">
+      ${AUTH.mode === 'up' ? '<label class="f" for="code">Your invite code (from Amin)</label><input class="in" id="code" autocapitalize="characters" autocomplete="off" required placeholder="10 letters/numbers">' : ''}
+      <label class="f" for="em">Email</label><input class="in" id="em" type="email" autocomplete="email" required>
+      <label class="f" for="pw">Password${AUTH.mode === 'up' ? ' (choose one, 8+ characters)' : ''}</label><input class="in" id="pw" type="password" autocomplete="${AUTH.mode === 'up' ? 'new-password' : 'current-password'}" minlength="${AUTH.mode === 'up' ? 8 : 1}" required>
+      <div class="err">${esc(AUTH.err)}</div>
+      <button class="btn gold block" type="submit" ${AUTH.busy || !ready ? 'disabled' : ''}>${AUTH.busy ? 'One sec…' : AUTH.mode === 'up' ? 'Create my account' : 'Sign in'}</button>
+    </form></div>
+    <p class="small muted" style="text-align:center">Forgot your password? Ask Amin to unlink your account, then use “First time” again with your invite code.</p>`;
+  $('#authf').addEventListener('submit', authSubmit);
+}
+async function authSubmit(ev) {
+  ev.preventDefault();
+  const email = $('#em').value.trim(), password = $('#pw').value, code = $('#code')?.value.trim();
+  AUTH.busy = true; AUTH.err = ''; viewAuth(); $('#em').value = email; $('#pw').value = password; if (code) $('#code').value = code;
+  try {
+    if (AUTH.mode === 'up') {
+      let { data, error } = await sb.auth.signUp({ email, password });
+      if (error && /already registered/i.test(error.message)) ({ data, error } = await sb.auth.signInWithPassword({ email, password }));
+      if (error) throw error;
+      if (!data.session) throw new Error('Account created, but email confirmation is switched on. Ask Amin to turn off "Confirm email" in Supabase.');
+      const name = await rpc('claim_player', { p_code: code });
+      toast(`Welcome, ${name}!`);
+    } else {
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+    }
+    await boot();
+  } catch (e) {
+    AUTH.busy = false; AUTH.err = cleanErr(e.message); viewAuth(); $('#em').value = email; if (code && $('#code')) $('#code').value = code;
+  }
+}
+async function boot() {
+  if (!sb) return viewAuth();
+  const { data } = await sb.auth.getSession();
+  if (!data.session) return viewAuth();
+  try {
+    if (!(await load())) { AUTH = { mode:'up', err:'Your login is not linked to a player yet. Enter your invite code.', busy:false }; return viewAuth(); }
+    render();
+  } catch (e) { $('#main').innerHTML = `<div class="card red" style="margin-top:20px">${esc(e.message)}</div><button class="btn" data-a="logout">Sign out</button>`; }
+}
+
+/* ================================================================ events */
+document.addEventListener('click', async (ev) => {
+  const el = ev.target.closest('[data-a]'); if (!el) return;
+  const a = el.dataset.a, v = el.dataset.v;
+  if (a === 'close') { if (ev.target === el || el.classList.contains('x') || el.tagName === 'BUTTON') closeSheet(); return; }
+  const run = async (fn, ok) => { el.disabled = true; try { await fn(); if (ok) toast(ok); await refresh(); } catch (e) { toast(e.message, true); el.disabled = false; } };
+  switch (a) {
+    case 'tab': S.tab = v; window.scrollTo(0, 0); render(); if (v === 'admin') { S.admin = null; render(); } break;
+    case 'shoptab': S.tab = 'shop'; render(); break;
+    case 'hist': S.hist = v; render(); break;
+    case 'amode': AUTH.mode = v; AUTH.err = ''; viewAuth(); break;
+    case 'logout': await sb.auth.signOut(); location.reload(); break;
+    case 'refresh': S.admin = null; await refresh(); break;
+    case 'match': openMatch(Number(v)); break;
+    case 'pick': B.pick = Number(v); B.confirm = false; B.err = ''; drawBet(); break;
+    case 'pw': B.pw = v || null; B.confirm = false; B.err = ''; drawBet(); break;
+    case 'lg': B.lg = Number(v); B.confirm = false; drawBet(); break;
+    case 'pct': { const f = Number(v); B.stake = String(Math.floor(r1(Number(S.me.balance) * f) * 10) / 10); B.confirm = false; drawBet(); break; }
+    case 'review': B.confirm = true; drawBet(); break;
+    case 'lock': lockBet(); break;
+    case 'item': openItem(Number(v)); break;
+    case 'tgt': BUY.target = Number(v); drawBuy(); break;
+    case 'buy': doBuy(); break;
+    case 'dn': openDn(Number(v)); break;
+    case 'dndecline': run(() => rpc('dn_respond', { p_purchase: Number(v), p_accept: false }), 'Challenge declined').then(closeSheet); break;
+    case 'dnaccept': {
+      const w = Math.floor(Number($('#dnw').value));
+      el.disabled = true;
+      try { await rpc('dn_respond', { p_purchase: Number(v), p_accept: true, p_wager: w }); closeSheet(); toast(`Accepted: ${w} GP each. Play it out!`); await refresh(); }
+      catch (e) { $('#dnerr').textContent = e.message; el.disabled = false; }
+      break; }
+    case 'hail': run(() => rpc('request_hail_mary'), 'Sent to admin for confirmation'); break;
+    // admin
+    case 'msave': { const p = Number($('#pct' + v).value), ko = $('#ko' + v).value;
+      run(() => rpc('admin_update_match', { p_match: Number(v), p_p1_pct: p, p_kickoff: ko ? beirutToIso(ko) : null }), 'Match updated'); break; }
+    case 'mstatus': run(() => rpc('admin_update_match', { p_match: Number(v), p_status: el.dataset.s }), el.dataset.s === 'open' ? 'Betting reopened' : 'Betting closed'); break;
+    case 'mreveal': run(() => rpc('admin_update_match', { p_match: Number(v), p_reveal: true }), 'Power-up revealed'); break;
+    case 'exsave': run(() => rpc('admin_set_exact_odds', { p_bet: Number(v), p_odds: Number($('#ex' + v).value) }), 'Exact odds saved'); break;
+    case 'msettle': { const w = Number($('#w' + v).value), lg = $('#lg' + v).value;
+      if (!w || lg === '') return toast('Pick the winner and the score', true);
+      if (!confirm(`Settle M${v}: ${P(w).name} wins 3–${lg}? This pays out every bet and can't be undone.`)) return;
+      run(async () => { const r = await rpc('admin_settle_match', { p_match: Number(v), p_winner: w, p_loser_games: Number(lg) }); toast(`${r.bets_settled} bets settled · ${gp(r.gp_paid)} GP paid`); }); break; }
+    case 'mvoid': { const why = prompt('Why is this match void? (refunds every stake and insurance fee)'); if (!why) return;
+      run(() => rpc('admin_void_match', { p_match: Number(v), p_reason: why }), 'Match voided, stakes refunded'); break; }
+    case 'pdone': run(() => rpc('admin_mark_purchase', { p_purchase: Number(v), p_status: 'fulfilled' }), 'Marked done'); break;
+    case 'pcancel': { const why = prompt('Reason for cancelling (the buyer is refunded)'); if (!why) return;
+      run(() => rpc('admin_mark_purchase', { p_purchase: Number(v), p_status: 'cancelled', p_note: why }), 'Cancelled and refunded'); break; }
+    case 'dnwin': if (!confirm(`Confirm ${P(Number(el.dataset.w)).name} won the Rock, Paper, Scissors?`)) return;
+      run(() => rpc('admin_dn_settle', { p_purchase: Number(v), p_winner: Number(el.dataset.w) }), 'Double or Nothing settled'); break;
+    case 'dncancel': { const why = prompt('Reason for cancelling this challenge? (any held wagers go back)'); if (!why) return;
+      const fee = confirm('Refund the buyer\'s fee too? OK = refund fee, Cancel = keep fee');
+      run(() => rpc('admin_dn_cancel', { p_purchase: Number(v), p_refund_fee: fee, p_reason: why }), 'Challenge cancelled'); break; }
+    case 'hmyes': if (!confirm(`Award ${P(Number(v)).name} 50 GP? Only do this after seeing the video.`)) return;
+      run(() => rpc('admin_hail_mary', { p_player: Number(v), p_award: true, p_note: 'Video confirmed' }), 'Hail Mary awarded'); break;
+    case 'hmno': { const why = prompt('Why reject? (they can try again)'); if (!why) return;
+      run(() => rpc('admin_hail_mary', { p_player: Number(v), p_award: false, p_note: why }), 'Rejected'); break; }
+    case 'adjust': { const p = Number($('#adjp').value), amt = Number($('#adja').value), why = $('#adjr').value.trim();
+      if (!amt || !why) return toast('Enter an amount and a reason', true);
+      if (!confirm(`${amt > 0 ? 'Give' : 'Take'} ${Math.abs(amt)} GP ${amt > 0 ? 'to' : 'from'} ${P(p).name}?`)) return;
+      run(() => rpc('admin_adjust', { p_player: p, p_amount: amt, p_reason: why }), 'Adjustment posted'); break; }
+    case 'unlink': if (!confirm(`Unlink ${P(Number(v)).name}'s login? They'll need their invite code to sign up again (their GP stays).`)) return;
+      run(() => rpc('admin_unlink_player', { p_player: Number(v) }), 'Unlinked'); break;
+  }
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheet(); });
+// Beirut wall-clock "YYYY-MM-DDTHH:MM" -> ISO, using Beirut's offset at that moment
+function beirutToIso(local) {
+  const guess = new Date(local + 'Z');
+  const off = (d) => { const p = new Intl.DateTimeFormat('en-US', { timeZone: TZ, timeZoneName: 'shortOffset' }).formatToParts(d).find((x) => x.type === 'timeZoneName').value; const m = p.match(/GMT([+-]\d+)?(?::(\d+))?/); return ((Number(m[1]) || 0) * 60 + Math.sign(Number(m[1]) || 1) * (Number(m[2]) || 0)); };
+  return new Date(guess.getTime() - off(guess) * 60000).toISOString();
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden && S.me) refresh().catch(() => {}); });
+setInterval(() => { if (S.me && !$('#layer').innerHTML && !document.hidden) refresh().catch(() => {}); }, 60000);
+if (sb && sb.auth.onAuthStateChange) sb.auth.onAuthStateChange((evt) => { if (evt === 'SIGNED_OUT') location.reload(); });
+boot();
+</script>
+</body>
+</html>
